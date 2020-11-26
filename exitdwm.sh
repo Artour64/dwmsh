@@ -1,7 +1,15 @@
 #/bin/bash
 #i="poweroff,reboot,exit --user,suspend,hibernate,hybrid-sleep"
-i="suspend,screen-off,logout,poweroff,reboot,restart-dwm"
-i=$(echo -e $i | rofi -i -sep ',' -dmenu -p systemctl)
+i="screen-off,suspend,logout,poweroff,reboot,restart-dwm"
+
+let "l=$(echo $i | tr ',' '\n' | wc -l)"
+if [ $( expr $l % 2) = 1 ]; then
+	let l++
+fi
+let l=l/2
+let s=240/$l
+
+i=$(echo -e $i | rofi -font "Red October $s" -lines $l -i -sep ',' -dmenu -p systemctl)
 if [ -z "$i" ]; then
 	exit
 elif [ "$i" == "logout" ]; then
